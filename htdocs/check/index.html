@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <script src="webglhelper.js"></script>
+    <script src="swfobject.js"></script>
+	<script src="http://x3dom.org/x3dom/release/x3dom-v1.2.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <title>Does My Browser Support WebGL?</title>
+    
+    <style>
+    .details {
+      width: 60%;
+      font: 10pt verdana;
+      margin: auto;
+      text-align: left;
+      padding: 2px;
+      border: 1px solid black;
+      /* This breaks Opera, so don't use it! */
+      /* border-radius: 10px;*/
+    }
+    
+	caption {
+		padding:0 0 1em 2px;
+		text-align:left;
+		font-weight:bold;
+	}
+
+    h1 {
+      margin: 0;
+      font: bold 200px verdana;
+      color: #000;
+      text-align: center;
+    }  
+	
+	x3d {display:none;}
+    </style>
+  </head>
+  
+  <body>
+
+    <h1 id="doesIt"></h1>
+    <br />
+
+    <table class="details" id="x3d">
+		<caption>X3DOM</caption>
+	</table>
+    <br />
+
+    <table class="details" id="tab">
+		<caption>System</caption>
+	</table>
+    <br />
+
+    <table class="details" id="shader">
+			<caption>Shader</caption>
+	</table>
+    <br />
+    
+    <table class="details" id="bits">
+			<caption>Bits</caption>
+	</table>
+    <br />
+
+    
+    <table class="details" id="tex">
+			<caption>Textures</caption>
+	</table>
+    <br />
+    
+    <table class="details" id="misc">
+			<caption>Misc</caption>
+	</table>
+    <br />
+    
+    <p style="text-align:center">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/">
+      <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" /></a><br />
+
+    </p>
+    <br />
+	
+	<x3d id="x3de" showStat="false" showLog="false" width="0px" height="0px"> 
+    <scene></scene> 
+    </x3d> 
+
+    <script type="text/javascript">
+
+	(function() {
+      var detailCounter = 0;
+      
+	  function list(arguments) {
+		var o = {};
+		for(var i=0;i<arguments.length;i++) {
+			o[arguments[i]]=null;
+		}
+		return o;
+	  }
+
+      function getParam(str){
+        return ctx.getParameter(str);
+      }
+      
+      function addLine(tableID, name, value){
+        if(typeof(value) === "object"){
+          var temp = "";
+          for(var i = 0; i < value.length; i++){
+            temp += value[i];
+            if(i < value.length-1){
+              temp += ", ";
+            }
+          }
+          value = temp;
+        }
+
+        var table = getTag(tableID);
+        
+        var tr = document.createElement("tr");
+        var tdName = document.createElement("td");
+        tdName.setAttribute('class', 'left');
+        var tdValue = document.createElement("td");
+        
+        // Highlight every other line to make reading a bit easier
+        if(detailCounter%2 === 0){
+          tr.style.background = "#CCC";
+        }
+        detailCounter++;
+          
+        tdName.innerHTML += name;
+        tdValue.innerHTML += value;
+        
+        tr.appendChild(tdName);
+        tr.appendChild(tdName);
+        tr.appendChild(tdValue);        
+        table.appendChild(tr);
+      }
+      
+      function getTag(str){
+        return document.getElementById(str);
+      }
+      
+      var cvs = document.createElement('canvas');
+      var contextNames = ["webgl","experimental-webgl","moz-webgl","webkit-3d"];
+      var ctx;
+
+      if(navigator.userAgent.indexOf("MSIE") >= 0) {
+        try{
+          ctx = WebGLHelper.CreateGLContext(cvs, 'canvas');
+         }catch(e){}
+      }
+      else{
+        for(var i = 0; i < contextNames.length; i++){
+          try{
+            ctx = cvs.getContext(contextNames[i]);
+            if(ctx){
+              addLine('tab','Context Name', contextNames[i]);
+              break;
+            }
+          }catch(e){}
+        }
+	  }
+	  
+      getTag("doesIt").innerHTML = ctx ? "Yay" : "Nay";
+      
+	
+	addLine('x3d','Flash 11', swfobject.hasFlashPlayerVersion("11.0.0") ? "Yes" : "No");
+
+	var filenames = ['npirplay.dll', 'InstantPluginATX.ocx'];
+	for (i = 0; i < navigator.plugins.length; ++i) {
+		if (navigator.plugins[i].filename in list(filenames)) {
+			addLine('x3d','Plugin', "Yes (" +navigator.plugins[i].filename + ")");
+		}
+	}
+
+	x3dom.runtime.ready = function() {
+		addLine('x3d','X3DOM loaded', "Yes");
+	};
+      
+
+      addLine('tab','Platform', navigator.platform);
+      addLine('tab','Agent', navigator.userAgent);
+
+      if(ctx){
+        addLine('tab','Vendor', getParam(ctx.VENDOR));
+        addLine('tab','Version', getParam(ctx.VERSION));
+        addLine('tab','Renderer', getParam(ctx.RENDERER));
+        addLine('tab','Shading Language Version', getParam(ctx.SHADING_LANGUAGE_VERSION));
+        
+        addLine('bits', 'RGBA Bits', getParam(ctx.RED_BITS) + ", "+ getParam(ctx.GREEN_BITS) + ", " + getParam(ctx.BLUE_BITS) + ", " + getParam(ctx.ALPHA_BITS));
+        addLine('bits', 'Depth Bits', getParam(ctx.DEPTH_BITS));
+        
+        addLine('shader','Max Vertex Attribs', getParam(ctx.MAX_VERTEX_ATTRIBS));
+        addLine('shader','Max Vertex Texture Image Units', getParam(ctx.MAX_VERTEX_TEXTURE_IMAGE_UNITS));
+        addLine('shader','Max Varying Vectors', getParam(ctx.MAX_VARYING_VECTORS));        
+        addLine('shader','Max Uniform Vectors', getParam(ctx.MAX_VERTEX_UNIFORM_VECTORS));
+        
+        addLine('tex', 'Max Combined Texture Image Units', getParam(ctx.MAX_COMBINED_TEXTURE_IMAGE_UNITS));
+        addLine('tex', 'Max Texture Size', getParam(ctx.MAX_TEXTURE_SIZE));
+        addLine('tex', 'Max Cube Map Texture Size', getParam(ctx.MAX_CUBE_MAP_TEXTURE_SIZE));
+        addLine('tex', 'Num. Compressed Texture Formats', getParam(ctx.NUM_COMPRESSED_TEXTURE_FORMATS));
+
+        addLine('misc', 'Max Render Buffer Size', getParam(ctx.MAX_RENDERBUFFER_SIZE));
+        addLine('misc', 'Max Viewport Dimensions', getParam(ctx.MAX_VIEWPORT_DIMS));
+        addLine('misc', 'Aliased Line Width Range', getParam(ctx.ALIASED_LINE_WIDTH_RANGE));
+        addLine('misc', 'Aliased Point Size Range', getParam(ctx.ALIASED_POINT_SIZE_RANGE));
+        addLine('misc', 'Supported Extensions', ctx.getSupportedExtensions().length === 0 ? "none" :ctx.getSupportedExtensions());
+      }
+      else{
+        document.body.removeChild(document.getElementById('bits'));
+        document.body.removeChild(document.getElementById('shader'));
+        document.body.removeChild(document.getElementById('misc'));
+        document.body.removeChild(document.getElementById('tex'));
+      }
+	  
+	  
+	  
+	  
+	  })();
+    </script>     
+  </body>
+</html>
