@@ -7,9 +7,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 	<script src="http://x3dom.org/x3dom/release/x3dom.js"></script>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
     <title>Does My Browser Support X3DOM?</title>
-    
     <style>
     .details {
       width: 60%;
@@ -42,14 +40,6 @@
   </head>
   
   <body>
-
-    <h1 id="doesIt"></h1>
-    <br />
-
-    <table class="details" id="system">
-		<caption>System</caption>
-	</table>
-    <br />
 
     <table class="details" id="native">
 			<caption>Native</caption>
@@ -160,27 +150,22 @@
 	  }
 	  
 	
-    addLine('system','Platform', navigator.platform);
-    addLine('system','Agent', navigator.userAgent);
+    addLine('native','Platform', navigator.platform);
+    addLine('native','Agent', navigator.userAgent);
 	
 	x3dom.runtime.ready = function() {
 		
-		addLine('system','X3DOM loaded', "Yes");
-		addLine('system','X3DOM version',   x3dom.versionInfo.version);
+		addLine('native','X3DOM loaded', "Yes");
+		addLine('native','X3DOM version',   x3dom.versionInfo.version);
 		if (x3dom.versionInfo.revision) {
-			addLine('system','X3DOM revision',   x3dom.versionInfo.revision);
+			addLine('native','X3DOM revision',   x3dom.versionInfo.revision);
 		}
 		if (x3dom.versionInfo.date) {
-			addLine('system','X3DOM date',   x3dom.versionInfo.date);
+			addLine('native','X3DOM date',   x3dom.versionInfo.date);
 		}
-		addLine('system','X3DOM using', x3dom.runtime.backendName());
+		addLine('native','X3DOM backend', x3dom.runtime.backendName());
 	};
 
-	var native_available = false;
-	if (!plugin_available) {
-		addLine('native','n/a', "");
-	}
-    
 	var plugin_available = false;
 	var filenames = ['npirplay.dll', 'InstantPluginATX.ocx'];
 	for (i = 0; i < navigator.plugins.length; ++i) {
@@ -223,7 +208,6 @@
       }
 	  
 	var isFlashAvailable = swfobject.hasFlashPlayerVersion("11.0.0");
-	
 	if (!isFlashAvailable) {
 		addLine('flash','Flash 11+ is not installed',"");
 	} else {
