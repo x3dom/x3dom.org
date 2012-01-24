@@ -81,10 +81,33 @@ should be encoded as b64 in CSS or img tag.</p>
             font-size:19px
         }
 
+        #footer {
+            padding: 10px 20px 10px 20px;
+            color:#999;
+            font-size:11px;
+            background-color: #eee;
+            border-radius: 0 0 10px 10px;
+        }
+
+        #footer a,
+        #footer a:hover,
+        #footer a:visited,
+        #footer a:active {
+            font-weight: bold;
+            color: #777;
+        }
+
         .solution {
             padding: 10px 20px 20px 20px;
             line-height: 1.6em;
             margin: 0 auto;
+        }
+        .solution h3 {
+            margin-top: 1em;
+        }
+
+        .solution a:hover {
+            border-bottom:  1px solid  #21558c;
         }
 
         .col p,
@@ -99,7 +122,7 @@ should be encoded as b64 in CSS or img tag.</p>
 
             // scripts go here
             //alert("Hello World");
-            
+
         })();
 
     </script>
@@ -128,7 +151,6 @@ should be encoded as b64 in CSS or img tag.</p>
 
     <div class="solution">
         <!-- solution steps -->
-        <h2>Here is what you can do</h2>
         <p><a href=""><strong>Install Chrome Frame</strong></a> for best experience or install the <a href="">latest Flash Player</a> if Chome Frame is
         not an option. You can install both as well. If you do not have the rights to install software on your
         computer, please contact your administrator and show her this message.</p>
@@ -138,6 +160,7 @@ should be encoded as b64 in CSS or img tag.</p>
 
         <h3>Install Flash Player</h3>
         <p>Steps outlined here</p>
+
     </div>
 
 
@@ -180,8 +203,23 @@ should be encoded as b64 in CSS or img tag.</p>
        <p>Please contact your system administrator.</p>
 
     </div>
+
+
+    <div id="footer">
+        <p>Brought to you by the <a href="http://x3dom.org">X3DOM</a> project</p>
+    </div>
   </div> <!-- /canvas -->
 
+
+    <!--
+    Edge cases | Notes
+    X3DOM application requires a WebGL renderer
+    Pass in information what the application requires index.html#0100 <- feature matrix bitmask
+    -->
+
+    <!--
+    Send feedback mail with browser data, etc.
+    -->
     
 </div></body>
 </html>
