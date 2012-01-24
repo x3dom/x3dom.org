@@ -5,6 +5,11 @@ And then display a suggestion what to download or update. It should
 be self-contained. No external resources needed, images, if required,
 should be encoded as b64 in CSS or img tag.</p>
 -->
+<!--
+- X3DOM application requires a WebGL renderer
+  Pass in information what the application requires index.html#0100 <- feature matrix bitmask
+- Send feedback mail with browser data, etc.
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,7 +60,7 @@ should be encoded as b64 in CSS or img tag.</p>
         }
 
         #head.warning {
-            background-color: #8b0000;
+            background-color: #556b2f;
         }
 
         #head.warning strong {
@@ -73,7 +78,7 @@ should be encoded as b64 in CSS or img tag.</p>
 
         #head h1 {
             font-size: 24px;
-            margin:0;
+            margin:0 0 10px 0;
             padding: 0;
          }
 
@@ -102,17 +107,26 @@ should be encoded as b64 in CSS or img tag.</p>
             line-height: 1.6em;
             margin: 0 auto;
         }
+
+        .solution h2 {
+            font-size: 16px;
+            margin: 1em 0 .5em 0;
+        }
+
         .solution h3 {
-            margin-top: 1em;
+            margin: 1.6em 0 .8em 0;
         }
 
         .solution a:hover {
             border-bottom:  1px solid  #21558c;
         }
-
-        .col p,
-        .col h2 {
+        .solution p {
+            margin-bottom:1em;
         }
+        .solution p:last-child {
+            margin-bottom:0;
+        }
+
 
 
     </style>
@@ -144,22 +158,29 @@ should be encoded as b64 in CSS or img tag.</p>
     <div id="head" class="warning">
       <h1>Optimizing your X3DOM experience</h1>
       <p class="info">
-          You are running on <strong>Windows</strong> using <strong>Internet Explorer</strong> and have
-          neither the latest Flash Player, nor Google Chrome installed.
+          You are surfing on <strong>Windows</strong> using <strong>Internet Explorer</strong> and have
+          neither the latest Flash Player, nor Chrome Frame installed.
       </p>
     </div>
 
     <div class="solution">
         <!-- solution steps -->
-        <p><a href=""><strong>Install Chrome Frame</strong></a> for best experience or install the <a href="">latest Flash Player</a> if Chome Frame is
-        not an option. You can install both as well. If you do not have the rights to install software on your
-        computer, please contact your administrator and show her this message.</p>
+        <h2>Here is what you can do</h2>
+        <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
+         not an option. You can install both as well.</p>
 
-        <h3>Install Chrome Frame</h3>
-        <p>Steps outlined here</p>
+      <!-- hide text by default (only topic), expand on click -->
+      <div class="more">
+        <h3>Can't install software on your computer?</h3>
+        <p>If you are in a corporate environment or governmental organization, it is quite possible the IT department
+        prevents you from installing software on your computer. If you know this is the case, please contact your
+        IT department and show them this message.</p>
 
-        <h3>Install Flash Player</h3>
-        <p>Steps outlined here</p>
+        <p>In case you don't know if you can or can not install software on your computer, just give it a try.
+        If you find out it's not possible, please contact your system administrator, IT guy, or ask your
+        boss or a collegue how to proceed.</p>
+      </div>
+
 
     </div>
 
@@ -211,16 +232,7 @@ should be encoded as b64 in CSS or img tag.</p>
   </div> <!-- /canvas -->
 
 
-    <!--
-    Edge cases | Notes
-    X3DOM application requires a WebGL renderer
-    Pass in information what the application requires index.html#0100 <- feature matrix bitmask
-    -->
 
-    <!--
-    Send feedback mail with browser data, etc.
-    -->
-    
 </div></body>
 </html>
 
