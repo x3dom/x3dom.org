@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--
+This file should detect which OS/Browser and plugin support is available.
+And then display a suggestion what to download or update. It should
+be self-contained. No external resources needed, images, if required,
+should be encoded as b64 in CSS or img tag.</p>
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>X3DOM Help Wizard</title>
+    <link rel="stylesheet" href="reset.css">
+    <style>
+        /* Style goes here */
+        body, html {
+            height: 100%;
+        }
+        
+        body {
+            font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+            font-size: 13px;
+            margin: 0;
+            padding: 0;
+            background: #ccc;
+            color: #333;
+        }
+
+        #page {
+            height: 100%;
+            overflow: visible;
+            position: relative;
+        }
+
+        #canvas {
+            position: relative;
+            top: 5%;
+            width: 80%;
+            margin: 0 auto;
+            background: white;
+            box-shadow:0px 0px 40px rgba(0,0,0,0.2) ;
+            border-radius: 10px;
+            max-width:52em;
+        }
+
+        #head {
+            padding: 20px;
+            background: #556b2f;
+            border-radius: 10px 10px 0 0;
+            color:white;
+
+        }
+
+        #head.ok {
+            background-color: #556b2f;
+        }
+
+        #head.warning {
+            background-color: #8b0000;
+        }
+
+        #head.warning strong {
+            color: yellow;
+        }
+
+        #head.critical {
+            background-color: #8b0000;
+        }
+
+        #head.fatal {
+            background-color: red;
+        }
+
+
+        #head h1 {
+            font-size: 24px;
+            margin:0;
+            padding: 0;
+         }
+
+        #head .info {
+            font-size:19px
+        }
+
+        .solution {
+            padding: 10px 20px 20px 20px;
+            line-height: 1.6em;
+            margin: 0 auto;
+        }
+
+        .col p,
+        .col h2 {
+        }
+
+
+    </style>
+
+    <script>
+        (function() {
+
+            // scripts go here
+            //alert("Hello World");
+            
+        })();
+
+    </script>
+
+
+</head>
+<body><div id="page">
+
+  <div id="canvas">
+
+    <!--
+    h1: What is going on? There are several classifications:
+      - X3DOM not running at all and not possible to run (or find out why not): fatal
+      - X3DOM not running but can be fixed: warning
+      - X3DOM running but not optimial: warning
+      - X3DOM all systems go and optimized: ok
+    -->
+
+    <div id="head" class="warning">
+      <h1>Optimizing your X3DOM experience</h1>
+      <p class="info">
+          You are running on <strong>Windows</strong> using <strong>Internet Explorer</strong> and have
+          neither the latest Flash Player, nor Google Chrome installed.
+      </p>
+    </div>
+
+    <div class="solution">
+        <!-- solution steps -->
+        <h2>Here is what you can do</h2>
+        <p><a href=""><strong>Install Chrome Frame</strong></a> for best experience or install the <a href="">latest Flash Player</a> if Chome Frame is
+        not an option. You can install both as well. If you do not have the rights to install software on your
+        computer, please contact your administrator and show her this message.</p>
+
+        <h3>Install Chrome Frame</h3>
+        <p>Steps outlined here</p>
+
+        <h3>Install Flash Player</h3>
+        <p>Steps outlined here</p>
+    </div>
+
+
+    <!--
+    this is hidden and lists all cases, use this for reference
+    implementing the screens
+    -->
+    <div class="col" style="display:none">
+
+        <!-- ok -->
+        <h1>Congratulations. You are already running a Operating System and Browser that supports X3DOM natively.</h1>
+        <p class="info">Not much you can do to improve your experience short of upgrading your hardware.</p>
+
+        <!-- critical -->
+        <h1>X3DOM is not working with your current configuration</h1>
+
+        <!-- Case -->
+        <p>You are running on Windows using Internet Explorer and have neither the latest Flash Player nor Google Chrome installed.</p>
+        <ul>
+            <li>Install Google Frame for best experience.</li>
+            <li>Install Flash Player 11</li>
+        </ul>
+
+        <!-- info -->
+        <h1>You can optimize your X3DOM experience</h1>
+        <!--case -->
+        <p class="info">You are running on Windows using Internet Explorer with Flash Player. There is room to optimize
+         your X3DOM experience.</p>
+
+        <ul>
+            <li>Install Google Frame</li>
+            <li>Use the Google Chrome Browser</li>
+        </ul>
+
+
+       <!-- fatal  -->
+       <h1>Sorry, you are running a unsupported system.</h1>
+       <p class="info">We are not able to detect why X3DOM does not work on your machine. Most likely your browser and hardware
+       is not suited for running 3D graphics.</p>
+       <p>Please contact your system administrator.</p>
+
+    </div>
+  </div> <!-- /canvas -->
+
+    
+</div></body>
+</html>
+
