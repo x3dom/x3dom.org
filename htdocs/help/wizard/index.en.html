@@ -17,15 +17,26 @@ should be encoded as b64 in CSS or img tag.</p>
     <title>X3DOM Help Wizard</title>
     <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="wizard.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="jquery-1.7.1.min.js"><\/script>')</script>
     <script src="detect.js"></script>
     <script>
+
         jQuery.noConflict();
         jQuery(document).ready(function() {
             jQuery('#info-os-name').text(BrowserDetect.OS);
             jQuery('#info-browser-name').text(BrowserDetect.browser);
             jQuery('#info-browser-version').text(BrowserDetect.version);
+
+            var flash_version = jQuery('#flash-version');
+            if ( swfobject.hasFlashPlayerVersion('11.0.0')) {
+                flash_version.text(swfobject.getFlashPlayerVersion().major);
+            } else {
+                flash_version.text("You need at least flash 11.");
+            }
+
+
         });
 
     </script>
@@ -33,12 +44,6 @@ should be encoded as b64 in CSS or img tag.</p>
 
 </head>
 <body><div id="page">
-
-    <script>
-        document.write('<p class="accent">You\'re using ' + BrowserDetect.browser + ' ' + BrowserDetect.version + ' on ' + BrowserDetect.OS + '!</p>');
-    </script>
-
-
   <div id="canvas">
 
     <!--
@@ -50,14 +55,11 @@ should be encoded as b64 in CSS or img tag.</p>
     -->
 
     <div id="head" class="warning">
-        <h1>
-        </h1>
 
       <h1>Optimizing your X3DOM experience</h1>
       <p class="info">
           You are surfing on <strong id="info-os-name">[OS]</strong> using <strong id="info-browser-name">[OS]</strong> version
-          <strong id="info-browser-version">[OS]</strong> and have
-          neither the latest Flash Player, nor Chrome Frame installed.
+          <strong id="info-browser-version">[OS]</strong> with Flash <strong id="flash-version">[FLASH VERSION]</strong> installed.
       </p>
     </div>
 
