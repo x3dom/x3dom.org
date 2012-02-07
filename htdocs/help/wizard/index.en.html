@@ -10,140 +10,34 @@ should be encoded as b64 in CSS or img tag.</p>
   Pass in information what the application requires index.html#0100 <- feature matrix bitmask
 - Send feedback mail with browser data, etc.
 -->
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>X3DOM Help Wizard</title>
-    <link rel="stylesheet" href="reset.css">
-    <style>
-        /* Style goes here */
-        body, html {
-            height: 100%;
-        }
-        
-        body {
-            font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-            font-size: 13px;
-            margin: 0;
-            padding: 0;
-            background: #ccc;
-            color: #333;
-        }
-
-        #page {
-            height: 100%;
-            overflow: visible;
-            position: relative;
-        }
-
-        #canvas {
-            position: relative;
-            top: 5%;
-            width: 80%;
-            margin: 0 auto;
-            background: white;
-            box-shadow:0px 0px 40px rgba(0,0,0,0.2) ;
-            border-radius: 10px;
-            max-width:52em;
-        }
-
-        #head {
-            padding: 20px;
-            background: #556b2f;
-            border-radius: 10px 10px 0 0;
-            color:white;
-
-        }
-
-        #head.ok {
-            background-color: #556b2f;
-        }
-
-        #head.warning {
-            background-color: #556b2f;
-        }
-
-        #head.warning strong {
-            color: yellow;
-        }
-
-        #head.critical {
-            background-color: #8b0000;
-        }
-
-        #head.fatal {
-            background-color: red;
-        }
-
-
-        #head h1 {
-            font-size: 24px;
-            margin:0 0 10px 0;
-            padding: 0;
-         }
-
-        #head .info {
-            font-size:19px
-        }
-
-        #footer {
-            padding: 10px 20px 10px 20px;
-            color:#999;
-            font-size:11px;
-            background-color: #eee;
-            border-radius: 0 0 10px 10px;
-        }
-
-        #footer a,
-        #footer a:hover,
-        #footer a:visited,
-        #footer a:active {
-            font-weight: bold;
-            color: #777;
-        }
-
-        .solution {
-            padding: 10px 20px 20px 20px;
-            line-height: 1.6em;
-            margin: 0 auto;
-        }
-
-        .solution h2 {
-            font-size: 16px;
-            margin: 1em 0 .5em 0;
-        }
-
-        .solution h3 {
-            margin: 1.6em 0 .8em 0;
-        }
-
-        .solution a:hover {
-            border-bottom:  1px solid  #21558c;
-        }
-        .solution p {
-            margin-bottom:1em;
-        }
-        .solution p:last-child {
-            margin-bottom:0;
-        }
-
-
-
-    </style>
-
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="wizard.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="jquery-1.7.1.min.js"><\/script>')</script>
+    <script src="detect.js"></script>
     <script>
-        (function() {
-
-            // scripts go here
-            //alert("Hello World");
-
-        })();
+        jQuery.noConflict();
+        jQuery(document).ready(function() {
+            jQuery('#info-os-name').text(BrowserDetect.OS);
+            jQuery('#info-browser-name').text(BrowserDetect.browser);
+            jQuery('#info-browser-version').text(BrowserDetect.version);
+        });
 
     </script>
 
 
 </head>
 <body><div id="page">
+
+    <script>
+        document.write('<p class="accent">You\'re using ' + BrowserDetect.browser + ' ' + BrowserDetect.version + ' on ' + BrowserDetect.OS + '!</p>');
+    </script>
+
 
   <div id="canvas">
 
@@ -156,9 +50,13 @@ should be encoded as b64 in CSS or img tag.</p>
     -->
 
     <div id="head" class="warning">
+        <h1>
+        </h1>
+
       <h1>Optimizing your X3DOM experience</h1>
       <p class="info">
-          You are surfing on <strong>Windows</strong> using <strong>Internet Explorer</strong> and have
+          You are surfing on <strong id="info-os-name">[OS]</strong> using <strong id="info-browser-name">[OS]</strong> version
+          <strong id="info-browser-version">[OS]</strong> and have
           neither the latest Flash Player, nor Chrome Frame installed.
       </p>
     </div>

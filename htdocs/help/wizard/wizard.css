@@ -1,0 +1,113 @@
+        /* Style goes here */
+        body, html {
+            height: 100%;
+        }
+
+        body {
+            font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+            font-size: 13px;
+            margin: 0;
+            padding: 0;
+            background: #ccc;
+            color: #333;
+        }
+
+        #page {
+            height: 100%;
+            overflow: visible;
+            position: relative;
+        }
+
+        #canvas {
+            position: relative;
+            top: 5%;
+            width: 80%;
+            margin: 0 auto;
+            background: white;
+            box-shadow:0px 0px 40px rgba(0,0,0,0.2) ;
+            border-radius: 10px;
+            max-width:52em;
+        }
+
+        #head {
+            padding: 20px;
+            background: #556b2f;
+            border-radius: 10px 10px 0 0;
+            color:white;
+
+        }
+
+        #head.ok {
+            background-color: #556b2f;
+        }
+
+        #head.warning {
+            background-color: #556b2f;
+        }
+
+        #head.warning strong {
+            color: yellow;
+        }
+
+        #head.critical {
+            background-color: #8b0000;
+        }
+
+        #head.fatal {
+            background-color: red;
+        }
+
+
+        #head h1 {
+            font-size: 24px;
+            margin:0 0 10px 0;
+            padding: 0;
+         }
+
+        #head .info {
+            font-size:19px
+        }
+
+        #footer {
+            padding: 10px 20px 10px 20px;
+            color:#999;
+            font-size:11px;
+            background-color: #eee;
+            border-radius: 0 0 10px 10px;
+        }
+
+        #footer a,
+        #footer a:hover,
+        #footer a:visited,
+        #footer a:active {
+            font-weight: bold;
+            color: #777;
+        }
+
+        .solution {
+            padding: 10px 20px 20px 20px;
+            line-height: 1.6em;
+            margin: 0 auto;
+        }
+
+        .solution h2 {
+            font-size: 16px;
+            margin: 1em 0 .5em 0;
+        }
+
+        .solution h3 {
+            margin: 1.6em 0 .8em 0;
+        }
+
+        .solution a:hover {
+            border-bottom:  1px solid  #21558c;
+        }
+        .solution p {
+            margin-bottom:1em;
+        }
+        .solution p:last-child {
+            margin-bottom:0;
+        }
+
+
+
