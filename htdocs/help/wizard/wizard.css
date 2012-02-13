@@ -29,7 +29,7 @@
             max-width:52em;
         }
 
-        #head {
+        .head {
             padding: 20px;
             background: #556b2f;
             border-radius: 10px 10px 0 0;
@@ -37,34 +37,34 @@
 
         }
 
-        #head.ok {
+        .ok {
             background-color: #556b2f;
         }
 
-        #head.warning {
+        .warning {
             background-color: #556b2f;
         }
 
-        #head.warning strong {
+        .warning p strong {
             color: yellow;
         }
 
-        #head.critical {
+        .critical {
             background-color: #8b0000;
         }
 
-        #head.fatal {
+        .fatal {
             background-color: red;
         }
 
 
-        #head h1 {
+        .head h1 {
             font-size: 24px;
             margin:0 0 10px 0;
             padding: 0;
          }
 
-        #head .info {
+        .head .info {
             font-size:19px
         }
 

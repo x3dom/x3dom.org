@@ -23,29 +23,114 @@ should be encoded as b64 in CSS or img tag.</p>
     <script src="detect.js"></script>
     <script>
 
-        jQuery.noConflict();
-        jQuery(document).ready(function() {
-            jQuery('#info-os-name').text(BrowserDetect.OS);
-            jQuery('#info-browser-name').text(BrowserDetect.browser);
-            jQuery('#info-browser-version').text(BrowserDetect.version);
+        $j = jQuery.noConflict();
+        $j(document).ready(function() {
+            var canvas;
+            var gl, experiental;
 
-            var flash_version = jQuery('#flash-version');
-            if ( swfobject.hasFlashPlayerVersion('11.0.0')) {
+            var has_web_gl = false;
+            var has_flash = false;
+
+            b = BrowserDetect;
+            b.init();
+
+          $j('#no-javascript').hide();
+          // set  support link to the correct URL for the browser.
+          $j("#support-link").href = b.urls.troubleshootingUrl;
+
+            canvas = document.getElementById("x3dom-logo");
+
+
+            try {
+                gl = canvas.getContext("webgl");
+            } catch (x) {
+                gl = null;
+            }
+
+            if (gl == null) {
+                try {
+                    gl = canvas.getContext("experimental-webgl");
+                    experimental = true;
+                } catch (x) {
+                    gl = null;
+                }
+            }
+
+            if (gl) {
+                // webgl works
+                has_web_gl = true;
+            } else if ("WebGLRenderingContext" in window) {
+
+            } else {
+                // no webgl
+                has_web_gl = false;
+            }
+
+            // detect flash
+            if (swfobject.hasFlashPlayerVersion('11.0.0')) {
+                has_flash = true;
+            }
+
+            var flash_version = $j("#flash-version");
+            if (has_flash) {
                 flash_version.text(swfobject.getFlashPlayerVersion().major);
             } else {
                 flash_version.text("You need at least flash 11.");
             }
 
 
+            if (!has_web_gl && !has_flash) {
+                $j("#no-webgl-no-flash").show();
+
+                // Do we know the browser and can it be upgraded?
+                if (b.browser != "unknown" && b.urls.upgradeUrl) {
+                    // Yes, show the browser and the upgrade link.
+                    $$("name").innerHTML = b.browser;
+                    $$("upgrade-link").href = b.urls.upgradeUrl;
+                } else {
+                    // No, so only the link for browser for this platform.
+                    $j("upgrade-browser").hide();
+                    $j("get-browser").hide();
+                    $j("platform").innerHTML = b.platform;
+                }
+            }
+
+
+
+
+            // info
+            $j('#info-browser-name').text(b.browser);
+            $j('#info-browser-version').text(b.version);
+
+
+
+            // IE
+            if (BrowserDetect.identity == "Explorer") {
+                // advice to install Chrome Frame, Flash 11, or use other browser
+                //return;
+            }
+            // Chrome
+            if (BrowserDetect.identity == "Chrome" && BrowserDetect.version > 8) {
+               // return;
+            }
+            if (BrowserDetect.identity == "Firefox" && BrowserDetect.version > 8) {
+                //return;
+            }
+            // if Chrome, or FF > 4: all good
+            // if Safari < 5: ancient browser (upgrade or flash 11)
+            // if FF < 4: ancient browser (upgrade or Flash 11)
+            // if IE -> other browser, chrome frame, falsh 11
         });
 
     </script>
 
 
 </head>
-<body><div id="page">
-  <div id="canvas">
+<body>
+<canvas id="x3dom-logo" style="display:none"></canvas>
 
+<div id="page">
+  <div id="canvas">
     <!--
     h1: What is going on? There are several classifications:
       - X3DOM not running at all and not possible to run (or find out why not): fatal
@@ -54,35 +139,132 @@ should be encoded as b64 in CSS or img tag.</p>
       - X3DOM all systems go and optimized: ok
     -->
 
-    <div id="head" class="warning">
+    <!--
+    This section helps if javascript is off
+    TODO: fix copy, maybe screenshots
+    -->
+    <div id="no-javascript">
 
-      <h1>Optimizing your X3DOM experience</h1>
-      <p class="info">
-          You are surfing on <strong id="info-os-name">[OS]</strong> using <strong id="info-browser-name">[OS]</strong> version
-          <strong id="info-browser-version">[OS]</strong> with Flash <strong id="flash-version">[FLASH VERSION]</strong> installed.
-      </p>
+        <div class="head fatal">
+            <h1>You must enable JavaScript in order to use X3DOM.</h1>
+        </div>
+
+        <div class="solution">
+            <h2>Here is what you can do</h2>
+            <p>Identify your browser first, then use the guidelines below to enable JavaScript for your browser.</p>
+
+            <h3>Internet Explorer</h3>
+            <p>Go to menue, do blah.</p>
+
+            <h3>Firefox</h3>
+            <p>Go to menue, do blah.</p>
+
+            <h3>Chrome</h3>
+            <p>Go to menue, do blah.</p>
+
+            <h3>Browser not listed here?</h3>
+            <p>Please see the reference manual of your browser in oder to enabel Javascript.</p>
+        </div>
     </div>
 
-    <div class="solution">
-        <!-- solution steps -->
-        <h2>Here is what you can do</h2>
-        <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
-         not an option. You can install both as well.</p>
 
-      <!-- hide text by default (only topic), expand on click -->
-      <div class="more">
-        <h3>Can't install software on your computer?</h3>
-        <p>If you are in a corporate environment or governmental organization, it is quite possible the IT department
-        prevents you from installing software on your computer. If you know this is the case, please contact your
-        IT department and show them this message.</p>
 
-        <p>In case you don't know if you can or can not install software on your computer, just give it a try.
-        If you find out it's not possible, please contact your system administrator, IT guy, or ask your
-        boss or a collegue how to proceed.</p>
+      <div id="no-webgl-no-flash" style="display:none">
+          <div class="head critical">
+              <h1>Your browser does not know WebGL and has no compatible Flash.</h1>
+          </div>
+
+          <div class="solution">
+              <!-- solution steps -->
+              <h2>Here is what you can do</h2>
+
+              <p><a id="upgrade-link" href="">You can upgrade <span id="name"></span> by clicking this link.</a></p>
+
+              <!-- IE -->
+              <div id="solution-ie">
+                  <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
+                  not an option.</p>
+              </div>
+
+              <div id="get-browser" class="webgl-hidden">
+                <p>You may want to download one of the following browsers to view X3DOM content.</p>
+                <p>The following browsers support WebGL on <span id="platform"></span>:</p>
+
+                 <div id="webgl-browser-list">
+                 </div>
+              </div>
+
+              <div class="more">
+                  <h3>Can't install software on your computer?</h3>
+                  <p>If you are in a corporate environment or governmental organization, it is quite possible the IT department
+                  prevents you from installing software on your computer. If you know this is the case, please contact your
+                  IT department and show them this message.</p>
+
+                  <p>In case you don't know if you can or can not install software on your computer, just give it a try.
+                  If you find out it's not possible, please contact your system administrator, IT guy, or ask your
+                  boss or a collegue how to proceed.</p>
+              </div>
+          </div>
       </div>
 
 
+
+    <!--
+
+    -->
+    <div id="optimizing">
+        <div class="head warning">
+            <h1>Battle station fully operational.</h1>
+            <p class="info">
+            You are surfing on <strong id="info-browser-name">[BROWSER]</strong> version
+            <strong id="info-browser-version">[VERSION]</strong> with Flash <strong id="flash-version">[FLASH VERSION]</strong> installed.
+            </p>
+        </div>
+
+        <div class="solution">
+            <!-- solution steps -->
+            <h2>Here is what you can do</h2>
+            <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
+            not an option. You can install both as well.</p>
+
+            <!-- hide text by default (only topic), expand on click -->
+            <div class="more">
+                <h3>Can't install software on your computer?</h3>
+                <p>If you are in a corporate environment or governmental organization, it is quite possible the IT department
+                prevents you from installing software on your computer. If you know this is the case, please contact your
+                IT department and show them this message.</p>
+
+                <p>In case you don't know if you can or can not install software on your computer, just give it a try.
+                If you find out it's not possible, please contact your system administrator, IT guy, or ask your
+                boss or a collegue how to proceed.</p>
+            </div>
+        </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     <!--
