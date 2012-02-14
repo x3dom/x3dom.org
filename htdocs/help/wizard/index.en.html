@@ -4,42 +4,48 @@ This file should detect which OS/Browser and plugin support is available.
 And then display a suggestion what to download or update. It should
 be self-contained. No external resources needed, images, if required,
 should be encoded as b64 in CSS or img tag.</p>
--->
-<!--
-- X3DOM application requires a WebGL renderer
-  Pass in information what the application requires index.html#0100 <- feature matrix bitmask
-- Send feedback mail with browser data, etc.
+
+Portions of code from:
+http://www.quirksmode.org/js/detect.html
+http://get.webgl.org/
+
+X3DOM application requires a WebGL renderer
+Pass in information what the application requires index.html#0100 <- feature matrix bitmask
+Send feedback mail with browser data, etc.
 -->
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>X3DOM Help Wizard</title>
-    <link rel="stylesheet" href="normalize.css">
-    <link rel="stylesheet" href="wizard.css">
+    <link rel="stylesheet" href="normalize.css" />
+    <link rel="stylesheet" href="wizard.css" />
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="jquery-1.7.1.min.js"><\/script>')</script>
     <script src="detect.js"></script>
     <script>
-
         $j = jQuery.noConflict();
         $j(document).ready(function() {
             var canvas;
             var gl, experiental;
 
             var has_web_gl = false;
-            var has_flash = false;
+            var has_flash  = false;
 
             b = BrowserDetect;
             b.init();
 
-          $j('#no-javascript').hide();
-          // set  support link to the correct URL for the browser.
-          $j("#support-link").href = b.urls.troubleshootingUrl;
+            $j('#no-javascript').hide();
+
+            // set  support link to the correct URL for the browser.
+            $j("#support-link").attr('href', b.urls.troubleshootingUrl);
+
+            // info
+            $j('#info-browser-name').text(b.browser);
+            $j('#info-browser-version').text(b.version);
 
             canvas = document.getElementById("x3dom-logo");
-
 
             try {
                 gl = canvas.getContext("webgl");
@@ -78,66 +84,61 @@ should be encoded as b64 in CSS or img tag.</p>
                 flash_version.text("You need at least flash 11.");
             }
 
-
-            if (!has_web_gl && !has_flash) {
+            if (!has_web_gl || !has_flash) {
                 $j("#no-webgl-no-flash").show();
-
                 // Do we know the browser and can it be upgraded?
                 if (b.browser != "unknown" && b.urls.upgradeUrl) {
                     // Yes, show the browser and the upgrade link.
-                    $$("name").innerHTML = b.browser;
-                    $$("upgrade-link").href = b.urls.upgradeUrl;
+                    $j("#name").html(b.browser);
+                    $j("#upgrade-link").attr('href', b.urls.upgradeUrl);
                 } else {
                     // No, so only the link for browser for this platform.
-                    $j("upgrade-browser").hide();
-                    $j("get-browser").hide();
-                    $j("platform").innerHTML = b.platform;
+                    randomizeBrowserList();
+                    $j("#upgrade-browser").hide();
+                    $j("#get-browser").show();
+                    $j("#platform").html(b.platform);
                 }
+            } else {
+                $j("#all-go").show();
             }
 
 
+            function randomizeBrowserList() {
+                var bl = $j("#browser-list");
+                var browsers = [];
+                var infos = b.platformInfo.browsers;
+                for (var ii = 0; ii < infos.length; ++ii) {
+                    browsers.push({
+                        info: infos[ii],
+                        weight: Math.random()
+                    });
+                }
 
+                browsers = browsers.sort(function(a, b) {
+                    if (a.weight < b.weight) return -1;
+                    if (a.weight > b.weight) return 1;
+                        return 0;
+                    });
 
-            // info
-            $j('#info-browser-name').text(b.browser);
-            $j('#info-browser-version').text(b.version);
+                    for (var ii = 0; ii < browsers.length; ++ii) {
+                        var info = browsers[ii].info;
+                        var div = document.createElement("p");
+                        var a = document.createElement("a");
+                        a.href = info.url;
+                        a.innerHTML = info.name;
+                        div.appendChild(a);
+                        bl.append(div);
+                    }
+                }
 
-
-
-            // IE
-            if (BrowserDetect.identity == "Explorer") {
-                // advice to install Chrome Frame, Flash 11, or use other browser
-                //return;
-            }
-            // Chrome
-            if (BrowserDetect.identity == "Chrome" && BrowserDetect.version > 8) {
-               // return;
-            }
-            if (BrowserDetect.identity == "Firefox" && BrowserDetect.version > 8) {
-                //return;
-            }
-            // if Chrome, or FF > 4: all good
-            // if Safari < 5: ancient browser (upgrade or flash 11)
-            // if FF < 4: ancient browser (upgrade or Flash 11)
-            // if IE -> other browser, chrome frame, falsh 11
         });
-
     </script>
-
 
 </head>
 <body>
 <canvas id="x3dom-logo" style="display:none"></canvas>
 
-<div id="page">
-  <div id="canvas">
-    <!--
-    h1: What is going on? There are several classifications:
-      - X3DOM not running at all and not possible to run (or find out why not): fatal
-      - X3DOM not running but can be fixed: warning
-      - X3DOM running but not optimial: warning
-      - X3DOM all systems go and optimized: ok
-    -->
+<div id="page"><div id="inner">
 
     <!--
     This section helps if javascript is off
@@ -177,20 +178,21 @@ should be encoded as b64 in CSS or img tag.</p>
           <div class="solution">
               <!-- solution steps -->
               <h2>Here is what you can do</h2>
-
-              <p><a id="upgrade-link" href="">You can upgrade <span id="name"></span> by clicking this link.</a></p>
-
+                <div id="upgrade-browser">
+                    <p><a id="upgrade-link" href="">You can upgrade <span id="name"></span> by clicking this link.</a></p>
+                </div>
               <!-- IE -->
               <div id="solution-ie">
                   <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
                   not an option.</p>
               </div>
 
-              <div id="get-browser" class="webgl-hidden">
+
+              <div id="get-browser">
                 <p>You may want to download one of the following browsers to view X3DOM content.</p>
                 <p>The following browsers support WebGL on <span id="platform"></span>:</p>
 
-                 <div id="webgl-browser-list">
+                 <div id="browser-list">
                  </div>
               </div>
 
@@ -208,110 +210,32 @@ should be encoded as b64 in CSS or img tag.</p>
       </div>
 
 
-
     <!--
-
+    Everything works fine.
     -->
-    <div id="optimizing">
+    <div id="all-go" style="display:none">
         <div class="head warning">
-            <h1>Battle station fully operational.</h1>
+            <h1>All systems go.</h1>
             <p class="info">
-            You are surfing on <strong id="info-browser-name">[BROWSER]</strong> version
-            <strong id="info-browser-version">[VERSION]</strong> with Flash <strong id="flash-version">[FLASH VERSION]</strong> installed.
+                You are surfing on <strong id="info-browser-name"></strong> version
+                <strong id="info-browser-version"></strong> with Flash <strong id="flash-version"></strong> installed. Perfect.
             </p>
         </div>
 
         <div class="solution">
-            <!-- solution steps -->
-            <h2>Here is what you can do</h2>
-            <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
-            not an option. You can install both as well.</p>
-
-            <!-- hide text by default (only topic), expand on click -->
-            <div class="more">
-                <h3>Can't install software on your computer?</h3>
-                <p>If you are in a corporate environment or governmental organization, it is quite possible the IT department
-                prevents you from installing software on your computer. If you know this is the case, please contact your
-                IT department and show them this message.</p>
-
-                <p>In case you don't know if you can or can not install software on your computer, just give it a try.
-                If you find out it's not possible, please contact your system administrator, IT guy, or ask your
-                boss or a collegue how to proceed.</p>
-            </div>
+            <p>You are using a browser that supports X3DOM. To further speed things up,
+                you can upgrade to a faster graphics card with more RAM, or try different browsers to speed up your
+                X3DOM experience.
+            </p>
+            
         </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!--
-    this is hidden and lists all cases, use this for reference
-    implementing the screens
-    -->
-    <div class="col" style="display:none">
-
-        <!-- ok -->
-        <h1>Congratulations. You are already running a Operating System and Browser that supports X3DOM natively.</h1>
-        <p class="info">Not much you can do to improve your experience short of upgrading your hardware.</p>
-
-        <!-- critical -->
-        <h1>X3DOM is not working with your current configuration</h1>
-
-        <!-- Case -->
-        <p>You are running on Windows using Internet Explorer and have neither the latest Flash Player nor Google Chrome installed.</p>
-        <ul>
-            <li>Install Google Frame for best experience.</li>
-            <li>Install Flash Player 11</li>
-        </ul>
-
-        <!-- info -->
-        <h1>You can optimize your X3DOM experience</h1>
-        <!--case -->
-        <p class="info">You are running on Windows using Internet Explorer with Flash Player. There is room to optimize
-         your X3DOM experience.</p>
-
-        <ul>
-            <li>Install Google Frame</li>
-            <li>Use the Google Chrome Browser</li>
-        </ul>
-
-
-       <!-- fatal  -->
-       <h1>Sorry, you are running a unsupported system.</h1>
-       <p class="info">We are not able to detect why X3DOM does not work on your machine. Most likely your browser and hardware
-       is not suited for running 3D graphics.</p>
-       <p>Please contact your system administrator.</p>
-
     </div>
 
 
     <div id="footer">
         <p>Brought to you by the <a href="http://x3dom.org">X3DOM</a> project</p>
     </div>
-  </div> <!-- /canvas -->
+  </div> <!-- /inner -->
 
 
 
