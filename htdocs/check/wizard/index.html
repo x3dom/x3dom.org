@@ -11,6 +11,8 @@ http://get.webgl.org/
 X3DOM application requires a WebGL renderer
 Pass in information what the application requires index.html#0100 <- feature matrix bitmask
 Send feedback mail with browser data, etc.
+
+TODO: Webgl Disabled (check WebGLRenderingcontext in window)
 -->
 <html>
 <head>
@@ -170,12 +172,13 @@ Send feedback mail with browser data, etc.
             if (has_flash) {
                 flash_version.text(swfobject.getFlashPlayerVersion().major);
             } else {
-                flash_version.text("You need at least flash 11.");
+                flash_version.text("not");
             }
 
 
             if (!has_web_gl && !has_flash) {
                 $j("#no-webgl-no-flash").show();
+                
                 // Do we know the browser and can it be upgraded?
                 if (b.browser != "unknown" && b.urls.upgradeUrl) {
                     // Yes, show the browser and the upgrade link.
@@ -188,6 +191,7 @@ Send feedback mail with browser data, etc.
                     $j("#get-browser").show();
                     $j("#platform").html(b.platform);
                 }
+                
             } else {
                 $j("#all-go").show();
 
@@ -291,7 +295,7 @@ Send feedback mail with browser data, etc.
 
       <div id="no-webgl-no-flash" class="hidden">
           <div class="head critical">
-              <h1>Your browser does not know WebGL and has no compatible Flash</h1>
+              <h1>Your browser does not know WebGL and has no compatible Flash installed</h1>
           </div>
 
           <div class="solution">
