@@ -14,7 +14,7 @@ Send feedback mail with browser data, etc.
 -->
 <html>
 <head>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--<meta http-equiv="X-UA-Compatible" content="chrome=1">-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>X3DOM Help Wizard</title>
@@ -47,7 +47,11 @@ Send feedback mail with browser data, etc.
         a:hover { text-decoration: none; }
 
         a:hover  { color: white; background-color: #333; border-radius: 2px; padding: 2px; margin: -2px; }
-
+        
+        ol li {
+            list-style:none;
+        }
+        
         #page    { height: 100%; overflow: visible; position: relative; }
 
         #inner   {
@@ -248,19 +252,37 @@ Send feedback mail with browser data, etc.
 
         <div class="solution">
             <h2>Here is what you can do</h2>
-            <p>Identify your browser first, then use the guidelines below to enable JavaScript for your&nbsp;browser.</p>
+            <p>First, identify your browser make. Then use the guidelines below to enable JavaScript for your&nbsp;browser.
+            If you are using an old borwser the settings might slightly differ. If you can not find the appropriate option
+            with the guidelines below, please consult the help system of your browser.</p>
 
 
             <!--[if IE]>
                 <h3>Internet Explorer</h3>
-                <p>In this case we know it's IE. So be more specific. Go to menue, do blah.</p>
+                <p>
+                    Go to the Settings menu and select "Internet Options".
+                    In the dialog box go to the "Security" tab.
+                    Click the button "Cusomtize Level...".
+                    In the "Scripting" section set the "Active Scripting" option to "Active".
+                </p>
             <![endif]-->
 
             <h3>Firefox</h3>
-            <p>Go to menue, do blah.</p>
+            <p>
+                In the Firefox menu select "Options".
+                In the dialog that appears select the "Content" section.
+                Check the "Enable JavaScript" option.
+           </p>
 
             <h3>Chrome</h3>
-            <p>Go to menue, do blah.</p>
+            <ol>
+                <li>Go to the Chrome settings menu (dark wrench next to the URL bar).</li>
+                <li>Select "Preferences".</li>
+                <li>On the right, select the "Unter the hood" tab.</li>
+                <li>In the Privacy area click on "Content Settings".</li>
+                <li>In the JavaScript section activate "Allow all sites to run JavaScript (recommended)".</li>
+
+            </ol>
 
             <h3>Browser not listed here?</h3>
             <p>Please see the reference manual of your browser in oder to enable Javascript.</p>
