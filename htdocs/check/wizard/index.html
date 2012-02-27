@@ -76,7 +76,7 @@ Send feedback mail with browser data, etc.
         .critical,
         .fatal { color: red; }
 
-
+        .warn {color:#556b2f;}
         .head h1 {
             font-weight: normal;
             letter-spacing: -1px;
@@ -107,7 +107,8 @@ Send feedback mail with browser data, etc.
 
             var has_web_gl = false;
             var has_flash  = false;
-
+            var x3d_element = null;
+            
             b = BrowserDetect;
             b.init();
 
@@ -161,11 +162,13 @@ Send feedback mail with browser data, etc.
             }
 
             var flash_version = $j("#flash-version");
+
             if (has_flash) {
                 flash_version.text(swfobject.getFlashPlayerVersion().major);
             } else {
                 flash_version.text("You need at least flash 11.");
             }
+
 
             if (!has_web_gl && !has_flash) {
                 $j("#no-webgl-no-flash").show();
@@ -183,6 +186,16 @@ Send feedback mail with browser data, etc.
                 }
             } else {
                 $j("#all-go").show();
+
+                x3d_element = document.getElementById('logo');
+                x3dom.runtime.ready = function() {
+                    if (x3d_element.runtime.backendName() == 'flash') {
+                        $j('#using-flash').show();
+                    }
+                };
+
+
+
             }
 
 
@@ -230,12 +243,12 @@ Send feedback mail with browser data, etc.
     <div id="no-javascript">
 
         <div class="head fatal">
-            <h1>You must enable JavaScript in order to use X3DOM</h1>
+            <h1>You must enable JavaScript in order to use&nbsp;X3DOM</h1>
         </div>
 
         <div class="solution">
             <h2>Here is what you can do</h2>
-            <p>Identify your browser first, then use the guidelines below to enable JavaScript for your browser.</p>
+            <p>Identify your browser first, then use the guidelines below to enable JavaScript for your&nbsp;browser.</p>
 
 
             <!--[if IE]>
@@ -263,19 +276,19 @@ Send feedback mail with browser data, etc.
               <!-- solution steps -->
               <h2>Here is what you can do</h2>
                 <div id="upgrade-browser">
-                    <p><a id="upgrade-link" href="">You can upgrade <span id="name"></span> by clicking this link.</a></p>
+                    <p><a id="upgrade-link" href="">You can upgrade <span id="name"></span> by clicking this&nbsp;link.</a></p>
                 </div>
 
                <!--[if IE]>
               <div id="upgrade-chromeframe">
                   <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
-                  not an option.</p>
+                  not an&nbsp;option.</p>
               </div>
               <![endif]-->
 
               <div id="get-browser">
                 <p>You may want to get another browser that supports WebGL. The following browsers support WebGL on <span id="platform"></span>
-                    and allow to render X3DOM content:</p>
+                    and allow to render X3DOM&nbsp;content:</p>
 
                  <div id="browser-list"></div>
               </div>
@@ -285,11 +298,11 @@ Send feedback mail with browser data, etc.
                   <div id="more-content" class="hidden">
                     <p>If you are in a corporate environment or governmental organization, it is quite possible the IT department
                     prevents you from installing software on your computer. If you know this is the case, please contact your
-                    IT department and show them this message.</p>
+                    IT department and show them this&nbsp;message.</p>
 
                     <p>In case you don't know if you can or can not install software on your computer, just give it a try.
                     If you find out it's not possible, please contact your system administrator, IT guy, or ask your
-                    boss or a collegue how to proceed.</p>
+                    boss or a collegue how to&nbsp;proceed.</p>
                   </div>
               </div>
           </div>
@@ -319,9 +332,19 @@ Send feedback mail with browser data, etc.
             </shape>
             </scene>
         </x3d>
-        <p>You should see a cyan box above and be able to move it around with your mouse.</p>
+
+        <p>You should see a cyan box above and be able to move it around by dragging it with your&nbsp;mouse.</p>
 
         <div class="solution">
+            
+            <div id="using-flash" class="warn hidden">
+                <p>
+                    3D content works best with WebGL. X3DOM currently uses flash to render scenes.
+                    For best performance, consider enabling WebGL in your browser or updating to a
+                    recent browser version which supports WebGL&nbsp;natively.
+                </p>
+
+            </div>
 
             <!--[if IE]>
             <div id="upgrade-chromeframe">
@@ -330,8 +353,7 @@ Send feedback mail with browser data, etc.
             </div>
             <![endif]-->
 
-            <p>You can upgrade to a faster graphics card with more RAM, or try different browsers to
-                speed up your X3DOM experience.
+            <p>Still too slow? Upgrade to a faster graphics card with more memory to speed up your X3DOM&nbsp;experience.
             </p>
             
         </div>
