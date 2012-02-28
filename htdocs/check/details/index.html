@@ -1,24 +1,20 @@
-
 <!DOCTYPE html>
-
 <html lang="en">
-  <head>
+<head>
     <script src="webglhelper.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-	<script src="http://x3dom.org/x3dom/release/x3dom.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<script src="http://x3dom.org/download/dev/x3dom.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
     <title>Does My Browser Support X3DOM?</title>
     <style>
     .details {
       width: 60%;
       font: 10pt verdana;
-      margin: auto;
+      margin: 1.5em auto 0 auto;
       text-align: left;
       padding: 2px;
       border: 1px solid black;
 	  border-collapse:collapse;
-      /* This breaks Opera, so don't use it! */
-      /* border-radius: 10px;*/
     }
     
 	.details caption {
@@ -33,50 +29,58 @@
       font: bold 200px verdana;
       color: #000;
       text-align: center;
-    }  
-	
+    }
+
+
 	x3d {display:none;}
     </style>
-  </head>
+</head>
   
-  <body>
+<body onload="init()">
+  <x3d id="x3de" showStat="false" showLog="false" width="0px" height="0px">
+      <scene></scene>
+  </x3d>
 
-    <table class="details" id="native">
-			<caption>Native support for X3DOM Elements</caption>
-	</table>
-    <br />
+  <table class="details" id="browser">
+    <caption>Browser informations</caption>
+  </table>
 
-    <table class="details" id="plugin">
-			<caption>X3D Plugin <small>(<a href='http://www.instantreality.org/story/modules/' target="_blank">instantPlugin</a>)</small></caption>
-	</table>
-    <br />
+  <table class="details" id="x3dom">
+    <caption>X3DOM JS frontend</caption>
+  </table>
 
-    <table class="details" id="webgl">
-			<caption>WebGL</caption>
-	</table>
-    <br />
+  <table class="details" id="native">
+    <caption>Native backend</caption>
+  </table>
 
-    <table class="details" id="flash">
-			<caption>Flash</caption>
-	</table>
-    <br />
+  <table class="details" id="plugin">
+    <caption>X3D plugin backend <small>(<a href='http://www.instantreality.org/story/modules/' target="_blank">instantPlugin</a>)</small></caption>
+  </table>
+
+  <table class="details" id="webgl">
+    <caption>WebGL backend</caption>
+  </table>
+
+  <table class="details" id="flash">
+    <caption>Flash backend</caption>
+  </table>
+
     
-    <p style="text-align:center">
+    <p>
       <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/">
-      <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" /></a><br />
-
+      <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" /></a>
     </p>
-    <br />
-	
-	<x3d id="x3de" showStat="false" showLog="false" width="0px" height="0px"> 
-    <scene></scene> 
-    </x3d> 
+
 
     <script type="text/javascript">
+        var runtimeReady = false;
+        x3dom.runtime.ready = function() {
+            runtimeReady = true;
+        }
 
-	(function() {
-      var detailCounter = 0;
-      
+        function init() {
+          var detailCounter = 0;
+
 	  function list(arguments) {
 		var o = {};
 		for(var i=0;i<arguments.length;i++) {
@@ -106,7 +110,7 @@
         var tr = document.createElement("tr");
         var tdName = document.createElement("td");
         tdName.setAttribute('class', 'left');
-		tdName.style.whiteSpace = 'nowrap';
+        tdName.style.whiteSpace = 'nowrap';
         var tdValue = document.createElement("td");
         
         // Highlight every other line to make reading a bit easier
@@ -150,21 +154,28 @@
 	  }
 	  
 	
-    addLine('native','Platform', navigator.platform);
-    addLine('native','Agent', navigator.userAgent);
-	
-	x3dom.runtime.ready = function() {
+    addLine('browser','Platform', navigator.platform);
+    addLine('browser','Agent', navigator.userAgent);
 		
-		addLine('native','X3DOM loaded', "Yes");
-		addLine('native','X3DOM version',   x3dom.versionInfo.version);
-		if (x3dom.versionInfo.revision) {
-			addLine('native','X3DOM revision',   x3dom.versionInfo.revision);
-		}
-		if (x3dom.versionInfo.date) {
-			addLine('native','X3DOM date',   x3dom.versionInfo.date);
-		}
-		addLine('native','X3DOM backend', x3dom.runtime.backendName());
-	};
+	addLine('native','n/a', "");
+
+     var element = document.getElementById('x3de');
+
+     if (runtimeReady) {
+
+        addLine('x3dom','X3DOM loaded', "Yes");
+
+
+    	addLine('x3dom','X3DOM version', x3dom.versionInfo.version);
+	    if (x3dom.versionInfo.revision) {
+		    addLine('x3dom','X3DOM revision',   x3dom.versionInfo.revision);
+	    }
+	    if (x3dom.versionInfo.date) {
+		    addLine('x3dom','X3DOM date',   x3dom.versionInfo.date);
+	    }
+	    addLine('x3dom','X3DOM backend', element.runtime.backendName());
+
+    }
 
 	var plugin_available = false;
 	var filenames = ['npirplay.dll', 'InstantPluginATX.ocx', 'AVALONATX.InstantPluginATXCtrl.1'];
@@ -180,7 +191,7 @@
 	}
 
     if(ctx){
-		addLine('webgl','Vendor', getParam(ctx.VENDOR));
+        addLine('webgl','Vendor', getParam(ctx.VENDOR));
         addLine('webgl','Version', getParam(ctx.VERSION));
         addLine('webgl','Renderer', getParam(ctx.RENDERER));
         addLine('webgl','Shading Language Version', getParam(ctx.SHADING_LANGUAGE_VERSION));
@@ -214,9 +225,8 @@
 		flashVersion = swfobject.getFlashPlayerVersion();
 		addLine('flash','Flash version', flashVersion.major + "." + flashVersion.minor + "." + flashVersion.release);
 	}
+    };
+    </script>
 
-	  
-	  })();
-    </script>     
-  </body>
+</body>
 </html>
