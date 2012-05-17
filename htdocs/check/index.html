@@ -9,7 +9,7 @@ http://www.quirksmode.org/js/detect.html
 http://get.webgl.org/
 
 X3DOM application requires a WebGL renderer
-Pass in information what the application requires index.html#0100 <- feature matrix bitmask
+Pass in information what the application requires index.html
 Send feedback mail with browser data, etc.
 
 TODO: Webgl Disabled (check WebGLRenderingcontext in window)
@@ -23,7 +23,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
     <link rel="stylesheet" href="normalize.css">
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="http://x3dom.org/download/current/x3dom.js"></script>
+    <script src="http://www.x3dom.org/download/x3dom.js"></script>
     <script>window.jQuery || document.write('<script src="jquery-1.7.1.min.js"><\/script>')</script>
     <script src="detect.js"></script>
     <style>
@@ -109,7 +109,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
         $j = jQuery.noConflict();
         $j(document).ready(function() {
             var canvas;
-            var gl, experiental;
+            var gl = null;
 
             var has_web_gl = false;
             var has_flash  = false;
@@ -137,17 +137,13 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
 
             canvas = document.getElementById("x3dom-logo");
 
-            try {
-                gl = canvas.getContext("webgl");
-            } catch (x) {
-                gl = null;
-            }
-
-            if (gl == null) {
+            var validContextNames = ['moz-webgl', 'webkit-3d', 'experimental-webgl', 'webgl'];
+            
+            for (var i=0; i<validContextNames.length && !gl; i++) {
                 try {
-                    gl = canvas.getContext("experimental-webgl");
-                    experimental = true;
-                } catch (x) {
+                    gl = canvas.getContext(validContextNames[i]);
+                }
+                catch (x) {
                     gl = null;
                 }
             }
@@ -156,7 +152,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
                 // webgl works
                 has_web_gl = true;
             } else if ("WebGLRenderingContext" in window) {
-
+                ; // ?
             } else {
                 // no webgl
                 has_web_gl = false;
@@ -165,6 +161,12 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             // detect flash
             if (swfobject.hasFlashPlayerVersion('11.0.0')) {
                 has_flash = true;
+            }
+            
+            var webgl_version = $j("#webgl-version");
+            
+            if (has_web_gl) {
+                webgl_version.text(" WebGL" + (has_flash ? " and " : " "));
             }
 
             var flash_version = $j("#flash-version");
@@ -201,9 +203,6 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
                         $j('#using-flash').show();
                     }
                 };
-
-
-
             }
 
 
@@ -257,7 +256,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
         <div class="solution">
             <h2>Here is what you can do</h2>
             <p>First, identify your browser make. Then use the guidelines below to enable JavaScript for your&nbsp;browser.
-            If you are using an old borwser the settings might slightly differ. If you can not find the appropriate option
+            If you are using an old browser the settings might slightly differ. If you can not find the appropriate option
             with the guidelines below, please consult the help system of your browser.</p>
 
 
@@ -289,7 +288,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             </ol>
 
             <h3>Browser not listed here?</h3>
-            <p>Please see the reference manual of your browser in oder to enable Javascript.</p>
+            <p>Please see the reference manual of your browser in oder to enable JavaScript.</p>
         </div>
     </div>
 
@@ -343,19 +342,20 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             <h1>Your browser supports X3DOM</h1>
             <p class="info">
                 You are surfing with <strong id="info-browser-name"></strong>&nbsp;version
-                <strong id="info-browser-version"></strong>&nbsp;with Flash <strong id="flash-version"></strong>&nbsp;installed.
+                <strong id="info-browser-version"></strong>&nbsp;with<span id="webgl-version"></span>&nbsp;Flash <strong id="flash-version"></strong>&nbsp;installed.
             </p>
         </div>
 
         <x3d id="logo" showLog="false"  width="300px" height="300px">
             <scene>
                 <viewpoint position='0 0 10' ></viewpoint>
-            <shape>
-                <appearance>
-                    <material diffuseColor='0.603 0.894 0.909' ></material>
-                </appearance>
-                <box DEF='box' ></box>
-            </shape>
+                <background></background>
+                <shape>
+                    <appearance>
+                        <material diffuseColor='0.603 0.894 0.909' ></material>
+                    </appearance>
+                    <box DEF='box' ></box>
+                </shape>
             </scene>
         </x3d>
 
@@ -385,14 +385,13 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             
         </div>
     </div>
-    <p><a href="details/">Detailed Information</a></p>
+    <p><a href="details/"><strong>Show Detailed Information</strong></a></p>
 
     <div id="footer">
-        <p>Brought to you by the <a href="http://x3dom.org">X3DOM</a> project</p>
+        <p>Brought to you by the <a href="http://www.x3dom.org">X3DOM</a> project</p>
     </div>
   </div> <!-- /inner -->
 
 
 </div></body>
 </html>
-

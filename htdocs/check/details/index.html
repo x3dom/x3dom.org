@@ -3,7 +3,7 @@
 <head>
     <script src="webglhelper.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-	<script src="http://x3dom.org/download/current/x3dom.js"></script>
+	<script src="http://www.x3dom.org/download/x3dom.js"></script>
     <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
     <title>Does My Browser Support X3DOM?</title>
     <style>
@@ -84,29 +84,29 @@
         function init() {
           var detailCounter = 0;
 
-	  function list(arguments) {
-		var o = {};
-		for(var i=0;i<arguments.length;i++) {
-			o[arguments[i]]=null;
-		}
-		return o;
-	  }
+    	  function list(arguments) {
+    		var o = {};
+    		for(var i=0;i<arguments.length;i++) {
+    			o[arguments[i]]=null;
+    		}
+    		return o;
+    	  }
 
-      function getParam(str){
-        return ctx.getParameter(str);
-      }
-      
-      function addLine(tableID, name, value){
-        if(typeof(value) === "object"){
-          var temp = "";
-          for(var i = 0; i < value.length; i++){
-            temp += value[i];
-            if(i < value.length-1){
-              temp += ", ";
-            }
+          function getParam(str) {
+            return ctx.getParameter(str);
           }
-          value = temp;
-        }
+      
+          function addLine(tableID, name, value) {
+            if(typeof(value) === "object") {
+              var temp = "";
+              for(var i = 0; i < value.length; i++) {
+                temp += value[i];
+                if(i < value.length-1) {
+                  temp += ", ";
+                }
+              }
+              value = temp;
+          }
 
         var table = getTag(tableID);
         
@@ -117,8 +117,11 @@
         var tdValue = document.createElement("td");
         
         // Highlight every other line to make reading a bit easier
-        if(detailCounter%2 === 0){
+        if(detailCounter%2 === 0) {
           tr.style.background = "#CCC";
+        }
+        else {
+          tr.style.background = "#EEE";  
         }
         detailCounter++;
           
