@@ -26,6 +26,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
     <script type='text/javascript' src='http://www.x3dom.org/x3dom/release/x3dom.js'></script>
     <script>window.jQuery || document.write('<script src="jquery-1.7.1.min.js"><\/script>')</script>
     <script src="detect.js"></script>
+    
     <style>
         /* Style goes here */
         body, html  { height: 100%; }
@@ -124,6 +125,10 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             // info
             $j('#info-browser-name').text(b.browser);
             $j('#info-browser-version').text(b.version);
+            
+            $j('#info-browser-name-old').text(b.browser);
+            $j('#info-browser-version-old').text(b.version);
+
 
             $j('#more-link').click(function() {
                 $j('#more-content').toggle();
@@ -177,8 +182,22 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
                 flash_version.text("not");
             }
 
+            var isOldIE = false;
+            var ieAndVersion = 0;
+            
+            if (navigator.userAgent.indexOf("MSIE") >= 0) { 
+                ieAndVersion = parseFloat(navigator.appVersion.split("MSIE")[1]);
+                if (ieAndVersion < 9)
+                    isOldIE = true;
+            }
 
-            if (!has_web_gl && !has_flash) {
+            if (isOldIE || (!has_web_gl && !has_flash)) {
+                if (isOldIE) {
+                    $j("#header-too-old").show();
+                }
+                else {
+                    $j("#header-no-gl-flash").show();
+                }
                 $j("#no-webgl-no-flash").show();
                 
                 // Do we know the browser and can it be upgraded?
@@ -193,8 +212,8 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
                     $j("#get-browser").show();
                     $j("#platform").html(b.platform);
                 }
-                
-            } else {
+            } 
+            else {
                 $j("#all-go").show();
 
                 x3d_element = document.getElementById('logo');
@@ -255,8 +274,8 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
 
         <div class="solution">
             <h2>Here is what you can do</h2>
-            <p>First, identify your browser make. Then use the guidelines below to enable JavaScript for your&nbsp;browser.
-            If you are using an old browser the settings might slightly differ. If you can not find the appropriate option
+            <p>First, identify your browser. Then use the guidelines below to enable JavaScript for your&nbsp;browser.
+            If you are using an old browser the settings might slightly differ. If you cannot find the appropriate option
             with the guidelines below, please consult the help system of your browser.</p>
 
 
@@ -281,20 +300,26 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             <ol>
                 <li>Go to the Chrome settings menu (dark wrench next to the URL bar).</li>
                 <li>Select "Preferences".</li>
-                <li>On the right, select the "Unter the hood" tab.</li>
+                <li>On the right, select the "Under the hood" tab.</li>
                 <li>In the Privacy area click on "Content Settings".</li>
                 <li>In the JavaScript section activate "Allow all sites to run JavaScript (recommended)".</li>
 
             </ol>
 
             <h3>Browser not listed here?</h3>
-            <p>Please see the reference manual of your browser in oder to enable JavaScript.</p>
+            <p>Please see the reference manual of your browser in order to enable JavaScript.</p>
         </div>
     </div>
 
       <div id="no-webgl-no-flash" class="hidden">
           <div class="head critical">
-              <h1>Your browser does not know WebGL and has no compatible Flash installed</h1>
+              <div id="header-too-old" class="hidden">
+                  <h1>Your browser <span id="info-browser-name-old"></span>&nbsp;version
+                    <span id="info-browser-version-old"></span>&nbsp;is too old</h1>
+              </div>
+              <div id="header-no-gl-flash" class="hidden">
+                  <h1>Your browser does not know WebGL and has no compatible Flash installed</h1>
+              </div>
           </div>
 
           <div class="solution">
@@ -304,16 +329,24 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
                     <p><a id="upgrade-link" href="">You can upgrade <span id="name"></span> by clicking this&nbsp;link.</a></p>
                 </div>
 
-               <!--[if IE]>
+                <!--[if lt IE 8]>
+                  <div id="upgrade-ie">
+                      <p>You should upgrade to Internet Explorer <strong>9</strong> and then install the latest 
+                        <a href="http://get.adobe.com/flashplayer/">flash player</a>.</p>
+                  </div>
+                <![endif]-->
+                  
+               <!--[if IE 9]>
               <div id="upgrade-chromeframe">
-                  <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> if chome frame is
-                  not an&nbsp;option.</p>
+                  <p><a href="http://www.google.com/chromeframe/eula.html"><strong>Install chrome frame</strong></a> 
+                  for best experience or <a href="http://get.adobe.com/flashplayer/">install the latest flash player</a> 
+                  if chome frame is not an&nbsp;option.</p>
               </div>
               <![endif]-->
 
               <div id="get-browser">
-                <p>You may want to get another browser that supports WebGL. The following browsers support WebGL on <span id="platform"></span>
-                    and allow to render X3DOM&nbsp;content:</p>
+                <p>You may want to get another browser that supports WebGL. The following browsers support WebGL on 
+                    <span id="platform"></span>&nbsp;and allow to render X3DOM&nbsp;content:</p>
 
                  <div id="browser-list"></div>
               </div>
@@ -325,9 +358,9 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
                     prevents you from installing software on your computer. If you know this is the case, please contact your
                     IT department and show them this&nbsp;message.</p>
 
-                    <p>In case you don't know if you can or can not install software on your computer, just give it a try.
+                    <p>In case you don't know if you can or cannot install software on your computer, just give it a try.
                     If you find out it's not possible, please contact your system administrator, IT guy, or ask your
-                    boss or a collegue how to&nbsp;proceed.</p>
+                    boss or a colleague how to&nbsp;proceed.</p>
                   </div>
               </div>
           </div>
@@ -388,7 +421,9 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
     <p><a href="details/"><strong>Show Detailed Information</strong></a></p>
 
     <div id="footer">
-        <p>Brought to you by the <a href="http://www.x3dom.org">X3DOM</a> project</p>
+        <p>Brought to you by the <a href="http://www.x3dom.org">X3DOM</a> project.</p>
+        <p>In case you have severe problems, please send an email describing your problem to
+           <a href='mailto:support@x3dom.org?subject=Problems with X3DOM'>support@x3dom.org</a>.</p>
     </div>
   </div> <!-- /inner -->
 
