@@ -23,7 +23,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
     <link rel="stylesheet" href="normalize.css">
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="http://www.x3dom.org/download/x3dom.js"></script>
+    <script type='text/javascript' src='http://www.x3dom.org/x3dom/release/x3dom.js'></script>
     <script>window.jQuery || document.write('<script src="jquery-1.7.1.min.js"><\/script>')</script>
     <script src="detect.js"></script>
     <style>
@@ -166,7 +166,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             var webgl_version = $j("#webgl-version");
             
             if (has_web_gl) {
-                webgl_version.text(" WebGL" + (has_flash ? " and " : " "));
+                webgl_version.text(" WebGL " + (has_flash ? "and" : "but"));
             }
 
             var flash_version = $j("#flash-version");
