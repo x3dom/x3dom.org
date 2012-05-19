@@ -112,7 +112,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             var canvas;
             var gl = null;
 
-            var has_web_gl = false;
+            var has_web_gl = false, is_old_webgl = false;
             var has_flash  = false;
             var x3d_element = null;
             
@@ -147,6 +147,15 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             for (var i=0; i<validContextNames.length && !gl; i++) {
                 try {
                     gl = canvas.getContext(validContextNames[i]);
+                    
+                    try {
+                        if (gl) {
+                            var tmp = gl.getSupportedExtensions();
+                        }
+                    }
+                    catch (x) {
+                        is_old_webgl = true;
+                    }
                 }
                 catch (x) {
                     gl = null;
@@ -172,6 +181,11 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             
             if (has_web_gl) {
                 webgl_version.text(" WebGL " + (has_flash ? "and" : "but"));
+                
+                if (is_old_webgl) {
+                    has_web_gl = false; // invalid version found
+                    $j("#header-webgl-too-old").show();
+                }
             }
 
             var flash_version = $j("#flash-version");
@@ -192,7 +206,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             }
 
             if (isOldIE || (!has_web_gl && !has_flash)) {
-                if (isOldIE) {
+                if (isOldIE || is_old_webgl) {
                     $j("#header-too-old").show();
                 }
                 else {
@@ -212,7 +226,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
                     $j("#get-browser").show();
                     $j("#platform").html(b.platform);
                 }
-            } 
+            }
             else {
                 $j("#all-go").show();
 
@@ -316,6 +330,9 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
               <div id="header-too-old" class="hidden">
                   <h1>Your browser <span id="info-browser-name-old"></span>&nbsp;version
                     <span id="info-browser-version-old"></span>&nbsp;is too old</h1>
+                  <div id="header-webgl-too-old" class="hidden">
+                      Though your browser theoretically has WebGL, it is only an old and no longer supported pre-alpha version of WebGL.
+                  </div>
               </div>
               <div id="header-no-gl-flash" class="hidden">
                   <h1>Your browser does not know WebGL and has no compatible Flash installed</h1>
