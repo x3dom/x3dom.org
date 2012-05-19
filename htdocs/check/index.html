@@ -11,8 +11,6 @@ http://get.webgl.org/
 X3DOM application requires a WebGL renderer
 Pass in information what the application requires index.html
 Send feedback mail with browser data, etc.
-
-TODO: Webgl Disabled (check WebGLRenderingcontext in window)
 -->
 <html>
 <head>
@@ -112,7 +110,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             var canvas;
             var gl = null;
 
-            var has_web_gl = false, is_old_webgl = false;
+            var has_web_gl = false, is_old_webgl = false, webgl_disabled = false;
             var has_flash  = false;
             var x3d_element = null;
             
@@ -165,12 +163,18 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             if (gl) {
                 // webgl works
                 has_web_gl = true;
-            } else if ("WebGLRenderingContext" in window) {
-                ; // ?
-            } else {
+            } 
+            else if ("WebGLRenderingContext" in window) {
+                // probably too old driver or gpu
+                has_web_gl = false;
+                if (b.browser != "Safari" || b.platform == "Mac")
+                    webgl_disabled = true;
+            } 
+            else {
                 // no webgl
                 has_web_gl = false;
             }
+
 
             // detect flash
             if (swfobject.hasFlashPlayerVersion('11.0.0')) {
@@ -208,6 +212,10 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
             if (isOldIE || (!has_web_gl && !has_flash)) {
                 if (isOldIE || is_old_webgl) {
                     $j("#header-too-old").show();
+                }
+                else if (webgl_disabled) {
+                    $j("#header-gl-disabled").show();
+                    $j("#header-webgl-disabled").show();
                 }
                 else {
                     $j("#header-no-gl-flash").show();
@@ -337,6 +345,12 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
               <div id="header-no-gl-flash" class="hidden">
                   <h1>Your browser does not know WebGL and has no compatible Flash installed</h1>
               </div>
+              <div id="header-gl-disabled" class="hidden">
+                  <h1>Your browser seems to support WebGL, but it is disabled or unavailable, and there is also no compatible Flash installed</h1>
+                  <div id="header-webgl-disabled" class="hidden">
+                      If possible, please ensure that you are running the latest drivers for your graphics card and/or upgrade your card.
+                  </div>
+              </div>
           </div>
 
           <div class="solution">
@@ -361,7 +375,7 @@ TODO: Webgl Disabled (check WebGLRenderingcontext in window)
               </div>
               <![endif]-->
 
-              <div id="get-browser">
+              <div id="get-browser" class="hidden">
                 <p>You may want to get another browser that supports WebGL. The following browsers support WebGL on 
                     <span id="platform"></span>&nbsp;and allow to render X3DOM&nbsp;content:</p>
 
