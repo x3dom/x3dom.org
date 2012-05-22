@@ -316,7 +316,7 @@
 		addLine('webgl', 'Mobile Platform', mobilePlatform ? 'yes' : 'no');    // on mobile native OpenGL ES 2.x renderer!
       } 
       else {
-        document.body.removeChild(document.getElementById('webgl'));
+        addLine('webgl','n/a',"");
       }
 	  
 	var isFlashAvailable = swfobject && swfobject.hasFlashPlayerVersion("11.0.0");
