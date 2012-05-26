@@ -91,7 +91,11 @@ Send feedback mail with browser data, etc.
          }
 
         /*.head .info { font-size: 19px }*/
-
+        
+        #x3dom_logdiv {
+            text-align: left;
+            line-height: 1.2em;
+        }
 
         .solution { padding: 10px 20px 20px 20px; margin: 0 auto; }
         .solution h2 { margin: 1em 0 .5em 0; }
@@ -242,6 +246,9 @@ Send feedback mail with browser data, etc.
                 x3dom.runtime.ready = function() {
                     if (x3d_element.runtime.backendName() == 'flash') {
                         $j('#using-flash').show();
+                    }
+                    else if (has_web_gl && b.browser == "Firefox") {
+                        $j('#using-wgl-ff').show();
                     }
                 };
             }
@@ -437,7 +444,20 @@ Send feedback mail with browser data, etc.
                     For best performance, consider enabling WebGL in your browser or updating to a
                     recent browser which supports WebGL&nbsp;natively.
                 </p>
-
+            </div>
+            
+            <div id="using-wgl-ff" class="hidden">
+                <p style="margin-left: auto; margin-right: auto; width: 600px; color: #555; line-height: 1.2em;">
+                    If you only see a black blackground please check under "about:config" if 
+                    <br>
+                    webgl.prefer-native-gl = false AND webgl.shader_validator = true
+                    <br>
+                    If these two values are set and you still see a black background, please
+                    click onto the black area, then press the 'd' key, and scroll down to the log.
+                    <br>
+                    If there are any (red) error messages saying that the instruction limit is
+                    exceeded, then you need to upgrade to a newer graphics card.
+                </p>
             </div>
 
             <!--[if IE]>
@@ -448,12 +468,13 @@ Send feedback mail with browser data, etc.
             <![endif]-->
 
             <p>Still too slow? Upgrade to a faster graphics card with more memory to speed up your X3DOM&nbsp;experience.</p>
-
-
             
         </div>
     </div>
-    <p><a href="details/"><strong>Show Detailed Information</strong></a></p>
+    
+    <div>
+        <p><a href="details/"><strong>Show Detailed Information</strong></a></p>
+    </div>
 
     <div id="footer">
         <p>Brought to you by the <a href="http://www.x3dom.org">X3DOM</a> project.</p>
@@ -462,6 +483,6 @@ Send feedback mail with browser data, etc.
     </div>
   </div> <!-- /inner -->
 
-
-</div></body>
+</div>
+</body>
 </html>

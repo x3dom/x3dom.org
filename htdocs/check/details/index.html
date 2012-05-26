@@ -49,6 +49,21 @@
     .centered {
         text-align: center;
     }
+    
+    .centeredForm {
+        margin-left:auto; 
+        margin-right:auto;
+        margin-top: 50px;
+        margin-bottom: 60px;
+        text-align: center;
+        width: 400px;
+        border: 1px black solid;
+    	padding: 5px 10px;
+    	border-radius: 10px;	
+    	background-color: #EEE;
+    	color: #000;
+    	opacity:0.7;
+    }
 
 	x3d {display:none;}
     </style>
@@ -72,7 +87,7 @@
   </table>
 
   <table class="details" id="plugin">
-    <caption>X3D plugin backend <small>(<a href='http://www.instantreality.org/story/modules/' target="_blank">instantPlugin</a>)</small></caption>
+    <caption>X3D plugin backend<small>(<a href='http://www.instantreality.org/story/modules/' target="_blank">instantPlugin</a>)</small></caption>
   </table>
 
   <table class="details" id="webgl">
@@ -83,12 +98,24 @@
     <caption>Flash backend</caption>
   </table>
 
-    
+    <!--
     <p id='helperP' class="centered">
         In case you have problems with X3DOM, you can send us an
         <a id='sendMail' href='mailto:support@x3dom.org?subject=Problems with X3DOM'>email</a> 
         with your browser configuration. 
     </p>
+    -->
+    
+    <form name="sendMailForm" action="mailto:support@x3dom.org?subject=Problems with X3DOM" method="post" 
+          onsubmit="return true;" enctype="text/plain" accept-charset="utf-8" class="centeredForm">
+        <input type="hidden" name="browserInfo" id="browserInfo">
+        <p>
+            In case you have issues with X3DOM, you can send us an email with your browser configuration.
+            Please also try to exactly describe your specific problem here.
+            <br><input type="submit" value="Send Mail" alt="Send Mail" 
+                       style="margin-top: 20px; font-size: 1em; background-color: #ccc;">
+        </p>
+    </form>
     
     <p class="centered">
       <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/">
@@ -123,7 +150,7 @@
     	// implement JSON.stringify serialization for IE
     	if (isIE || !JSON.stringify) {
             JSON.stringify = function (obj) {
-            	var t = typeof (obj);
+            	var t = typeof(obj);
             	if (t != "object" || obj === null) {
             		// simple data type
             		if (t == "string") obj = '\\"'+obj+'\\"';
@@ -142,6 +169,26 @@
             	}
             };
         }
+        
+        createSimpleString = function (obj, i) {
+        	if (obj) {
+        		var n, v, json = "";
+        		for (n in obj) {
+        			v = obj[n];
+        			if (i==0) json += ("\n'" + n + "': ");
+        			if (v !== null && typeof(v) == "object") {
+        			    v = createSimpleString(v, i+1);
+    			    }
+    			    if (i==2 && n == "name" && v != "n/a")
+        			    json += (v + ": ");
+        			else if (i==2 && n == "value" && v != "")
+            			json += (v + ", ");
+            		else
+                		json += (v + " ");
+        		}
+        		return json;
+        	}
+        };
     	
     	
         function init() 
@@ -328,11 +375,15 @@
 	}
 	
 	// problems? send mail...
+    var browserInfo = document.getElementById("browserInfo");
+    var escSupportInfo = createSimpleString(jsonStr, 0);
+    browserInfo.setAttribute('value', escSupportInfo);
+    
+    /*
     var sender = document.getElementById('sendMail');
     var supportInfo = JSON.stringify(jsonStr);
-    
     sender.setAttribute('href', 'mailto:support@x3dom.org?subject=Problems with X3DOM\&body=' + supportInfo);
-
+    */
     };
     </script>
 
