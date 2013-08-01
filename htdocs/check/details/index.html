@@ -313,9 +313,9 @@
     if (isIE) {
       try{
         ctx = WebGLHelper.CreateGLContext(cvs, 'canvas');
-       }catch(e){}
+       } catch(e){}
     }
-    else {
+    if (!ctx) {
       for(var i = 0; i < contextNames.length && !ctx; i++) {
         try {
           ctx = cvs.getContext(contextNames[i]);
