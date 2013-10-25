@@ -19,6 +19,7 @@ Send feedback mail with browser data, etc.
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>X3DOM Help Wizard</title>
     <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="http://www.x3dom.org/download/dev/x3dom.css">
     <script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type='text/javascript' src='http://www.x3dom.org/download/dev/x3dom.js'></script>
@@ -195,8 +196,11 @@ Send feedback mail with browser data, etc.
             
             if (has_web_gl)
             {
-                has_web_gl = false;
-                is_old_webgl = true;
+                var webglVersion = parseFloat(gl.getParameter(gl.VERSION).match(/\d+\.\d+/)[0]);
+                if (webglVersion < 1.0) {
+                    has_web_gl = false;
+                    is_old_webgl = true;
+                }
             }
 
             // detect flash
@@ -440,6 +444,8 @@ Send feedback mail with browser data, etc.
             </p>
         </div>
 
+        <div style="width:300px; height:300px; margin: 0 auto">
+        
         <x3d id="logo" showLog="false" style="width:300px; height:300px">
             <scene>
                 <viewpoint position='0 0 10' ></viewpoint>
@@ -452,6 +458,8 @@ Send feedback mail with browser data, etc.
                 </shape>
             </scene>
         </x3d>
+        </div>
+        <div style="clear:both"></div>
         
         <p>You should see a cyan box above and be able to move it around by dragging it with your&nbsp;mouse.</p>
 
