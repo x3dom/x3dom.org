@@ -201,6 +201,7 @@
         		}
         		return json;
         	}
+            return null;
         };
     	
     	
@@ -346,7 +347,7 @@
         
         addLine('webgl','Max Vertex Attribs', ctx.getParameter(ctx.MAX_VERTEX_ATTRIBS));
         addLine('webgl','Max Vertex Texture Image Units', ctx.getParameter(ctx.MAX_VERTEX_TEXTURE_IMAGE_UNITS));
-        
+
         if (!is_old_webgl) {
         addLine('webgl','Max Varying Vectors', ctx.getParameter(ctx.MAX_VARYING_VECTORS));        
         addLine('webgl','Max Uniform Vectors', ctx.getParameter(ctx.MAX_VERTEX_UNIFORM_VECTORS));
@@ -387,7 +388,7 @@
 	if (!isFlashAvailable) {
 		addLine('flash','Flash 11+ is not installed',"");
 	} else {
-		flashVersion = swfobject.getFlashPlayerVersion();
+		var flashVersion = swfobject.getFlashPlayerVersion();
 		addLine('flash','Flash version', flashVersion.major + "." + flashVersion.minor + "." + flashVersion.release);
 	}
 	
@@ -403,8 +404,7 @@
     //var supportInfo = JSON.stringify(jsonStr);
     //sender.setAttribute('href', 'mailto:support@x3dom.org?subject=Problems with X3DOM\&body=' + supportInfo);
     sender.setAttribute('href', 'mailto:x3dom-developers@lists.sourceforge.net?subject=Problems with X3DOM&body=' + escSupportInfo);
-    
-    };
+    }
     </script>
 
 </body>

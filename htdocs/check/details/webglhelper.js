@@ -99,4 +99,4 @@ var WebGLHelper = {
         WebGLHelper.CreateGLCanvas(placeHolder, id, true);
     }
 
-}
+};
