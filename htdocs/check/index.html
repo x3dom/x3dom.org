@@ -82,7 +82,7 @@ Send feedback mail with browser data, etc.
         .critical,
         .fatal { color: red; }
 
-        .warn {color:#8b0000; font-weight:bold}
+        .warn {color:#ffcc00; font-weight:bold}
         .head h1 {
             font-weight: normal;
             letter-spacing: -1px;
@@ -130,7 +130,7 @@ Send feedback mail with browser data, etc.
             var gl = null;
 
             var has_web_gl = false, is_old_webgl = false, webgl_disabled = false;
-            var has_flash  = false;
+            var has_flash  = false, is_beta_webgl = false;
             var x3d_element = null;
             
             b = BrowserDetect;
@@ -141,10 +141,10 @@ Send feedback mail with browser data, etc.
 
             // info
             $j('#info-browser-name').text(b.browser);
-            $j('#info-browser-version').text(b.version);
+            $j('#info-browser-version').text("v" + b.version);
             
             $j('#info-browser-name-old').text(b.browser);
-            $j('#info-browser-version-old').text(b.version);
+            $j('#info-browser-version-old').text("v" + b.version);
 
 
             $j('#more-link').click(function() {
@@ -198,8 +198,8 @@ Send feedback mail with browser data, etc.
             {
                 var webglVersion = parseFloat(gl.getParameter(gl.VERSION).match(/\d+\.\d+/)[0]);
                 if (webglVersion < 1.0) {
-                    has_web_gl = false;
-                    is_old_webgl = true;
+                    has_web_gl = true;
+                    is_beta_webgl = true;
                 }
             }
 
@@ -207,11 +207,20 @@ Send feedback mail with browser data, etc.
             if (swfobject.hasFlashPlayerVersion('11.0.0')) {
                 has_flash = true;
             }
-            
+            console.log("PUP");
             var webgl_version = $j("#webgl-version");
-            
             if (has_web_gl) {
-                webgl_version.text(" WebGL " + (has_flash ? "and" : "but"));
+                
+                
+                if (webglVersion < 1.0) {
+                    webgl_version.text("v" + webglVersion);
+                    webgl_version.addClass("warn");
+                } else {
+                    webgl_version.text("v" + webglVersion);
+                    webgl_version.addClass("ok");
+                }
+                    
+                $j("#bind-word").text(((has_flash) ? "and " : "but "));
                 
                 if (is_old_webgl) {
                     has_web_gl = false; // invalid version found
@@ -221,10 +230,12 @@ Send feedback mail with browser data, etc.
 
             var flash_version = $j("#flash-version");
 
-            if (has_flash) {
-                flash_version.text(swfobject.getFlashPlayerVersion().major);
-            } else {
+            if (has_flash) {       
+                flash_version.text("v" + swfobject.getFlashPlayerVersion().major);
+                flash_version.addClass("ok");
+            } else {     
                 flash_version.text("not");
+                flash_version.addClass("warn");
             }
 
             var isOldIE = false;
@@ -369,7 +380,7 @@ Send feedback mail with browser data, etc.
                   <h1>Your browser <span id="info-browser-name-old"></span>&nbsp;version
                     <span id="info-browser-version-old"></span>&nbsp;is too old</h1>
                   <div id="header-webgl-too-old" class="hidden">
-                      Though your browser theoretically has WebGL, it is only an old and no longer supported pre-alpha version of WebGL.
+                      Though your browser theoretically has WebGL, it is only an old or pre-alpha version of WebGL.
                   </div>
               </div>
               <div id="header-no-gl-flash" class="hidden">
@@ -439,8 +450,10 @@ Send feedback mail with browser data, etc.
         <div class="head ok">
             <h1>Your browser supports X3DOM</h1>
             <p class="info">
-                You are surfing with <strong id="info-browser-name"></strong>&nbsp;version
-                <strong id="info-browser-version"></strong>&nbsp;with<span id="webgl-version"></span>&nbsp;Flash <strong id="flash-version"></strong>&nbsp;installed.
+                You are surfing with <strong class="ok" id="info-browser-name"></strong>
+                <strong class="ok" id="info-browser-version"></strong>&nbsp;with&nbsp;WebGL&nbsp;<strong id="webgl-version"></strong>&nbsp;<span id="bind-word"></span>Flash <strong id="flash-version"></strong>&nbsp;installed.
+            </p>
+            <p class="betaInfo">
             </p>
         </div>
 
