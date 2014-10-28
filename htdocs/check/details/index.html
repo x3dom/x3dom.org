@@ -310,18 +310,37 @@
     var contextNames = ["webgl","experimental-webgl","moz-webgl","webkit-3d"];
     var ctx = null;
     var is_old_webgl = false;
+    var rendering = "Hardware";
 
     if (isIE) {
       try{
-        ctx = WebGLHelper.CreateGLContext(cvs, 'canvas');
+        ctx = WebGLHelper.CreateGLContext(cvs, 'canvas', null, contextAttributes);
        } catch(e){}
     }
     if (!ctx) {
       for(var i = 0; i < contextNames.length && !ctx; i++) {
         try {
-          ctx = cvs.getContext(contextNames[i]);
+          ctx = cvs.getContext(contextNames[i], { failIfMajorPerformanceCaveat : true });
+          
+          if(!ctx) {
+            ctx = cvs.getContext(contextNames[i], { failIfMajorPerformanceCaveat : false });
+            if(ctx) {
+                rendering = "Software";
+            }
+          }
+          
           if(ctx) {
             addLine('webgl','Context Name', contextNames[i]);
+            
+            if (typeof ctx.getContextAttributes().failIfMajorPerformanceCaveat === 'undefined') {
+                // If getContextAttributes() doesn't include the failIfMajorPerformanceCaveat
+                // property, assume the browser doesn't implement it yet.
+                addLine('webgl', 'FailIfMajorPerformanceCaveat', 'Not implemented');
+                addLine('webgl', 'Rendering', 'Hardware');
+            } else {
+                addLine('webgl', 'failIfMajorPerformanceCaveat', 'Implemented');
+                addLine('webgl', 'Rendering', rendering);
+            }
             
             try {
                 var tmp = ctx.getSupportedExtensions();
@@ -336,8 +355,18 @@
 	}
 	
     if(ctx) {
-        addLine('webgl','Vendor', ctx.getParameter(ctx.VENDOR));
-        addLine('webgl','Renderer', ctx.getParameter(ctx.RENDERER));
+        var debugRenderInfo = ctx.getExtension("WEBGL_debug_renderer_info");
+        
+        var UNMASKED_RENDERER_WEBGL = "";
+        var UNMASKED_VENDOR_WEBGL = "";
+        
+        if (debugRenderInfo) {
+            UNMASKED_RENDERER_WEBGL = " " + ctx.getParameter( x3dom.caps.DEBUGRENDERINFO.UNMASKED_RENDERER_WEBGL );
+            UNMASKED_VENDOR_WEBGL = " " + ctx.getParameter( x3dom.caps.DEBUGRENDERINFO.UNMASKED_VENDOR_WEBGL );
+        }
+    
+        addLine('webgl','Vendor', ctx.getParameter(ctx.VENDOR) + UNMASKED_VENDOR_WEBGL);
+        addLine('webgl','Renderer', ctx.getParameter(ctx.RENDERER) + UNMASKED_RENDERER_WEBGL);
         addLine('webgl','Version', ctx.getParameter(ctx.VERSION));
         addLine('webgl','Shading Language Version', ctx.getParameter(ctx.SHADING_LANGUAGE_VERSION));
         
